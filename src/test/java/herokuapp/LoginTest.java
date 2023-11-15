@@ -61,7 +61,7 @@ public class LoginTest {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
 
-        assertTrue(driver.findElement(By.id("flash")).isDisplayed(), "Fehlermeldung für ungültigen Benutzernamen nicht angezeigt");
+        assertTrue(driver.findElement(By.id("flash")).isDisplayed(), "Fehlermeldung für ungültigen Benutzernamen");
 
     }
 
@@ -69,8 +69,6 @@ public class LoginTest {
     @DisplayName("Fehlermeldung für ungültiges Passwort")
     void invalidPasswordErrorMessage() {
         driver.get("https://the-internet.herokuapp.com/login"); // Öffnet die Login-Seite
-
-        // Eingabe eines gültigen Benutzernamens und eines ungültigen Passworts
 
     }
 }
