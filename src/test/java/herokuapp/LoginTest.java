@@ -4,12 +4,11 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginTest {
@@ -33,11 +32,12 @@ public class LoginTest {
         }
     }
 
+
     @Test
     @DisplayName("Gültige Anmeldung")
     void validUserLogin() {
         driver.get("https://the-internet.herokuapp.com/login"); // Öffnet die Login-Seite.
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
         // Eingabe gültiger Anmeldedaten
         driver.findElement(By.id("username")).sendKeys("tomsmith");
@@ -46,18 +46,19 @@ public class LoginTest {
 
     }
 
+
+
     @Test
     @DisplayName("Fehlermeldung für ungültigen Benutzernamen")
     void invalidUsernameErrorMessage() {
         driver.get("https://the-internet.herokuapp.com/login"); // Öffnet die Login-Seite
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
 
         // Eingabe eines ungültigen Benutzernamens
         driver.findElement(By.id("username")).sendKeys("ungültigerBenutzername");
-        driver.findElement(By.id("password")).sendKeys("irgendEinPasswort");
+        driver.findElement(By.id("password")).sendKeys("EinPasswort");
         driver.findElement(By.id("login")).click();
-
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
 
@@ -65,10 +66,21 @@ public class LoginTest {
 
     }
 
+
     @Test
     @DisplayName("Fehlermeldung für ungültiges Passwort")
     void invalidPasswordErrorMessage() {
-        driver.get("https://the-internet.herokuapp.com/login"); // Öffnet die Login-Seite
+        driver.get("https://the-internet.herokuapp.com/login");
 
+        driver.findElement(By.id("username")).sendKeys("tomsmith");
+        driver.findElement(By.id("password")).sendKeys("invalidPassword");
+        driver.findElement(By.id("login")).click();
+
+        // Warte auf die Fehlermeldung
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("flash")));
+
+        // Überprüfen, ob die Fehlermeldung für ungültiges Passwort vorhanden ist
+        assertTrue(errorMessage.getText().contains("Your password is invalid!"), "Fehlermeldung für ungültiges Passwort wurde nicht angezeigt");
     }
 }
